@@ -27,7 +27,7 @@ function UploadAds({addThumbnail}) {
     makeFileObjects(e.dataTransfer.files[0].text());
   };
   function makeStorageClient () {
-    return new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDQwQTM4QTA4MWYzMzc1YzZjOUE1RDUwYTM0ZEUzOTAzYTRCNzBkMjkiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODc2MzI5MzYzMzQsIm5hbWUiOiJ0ZXN0LXRva2VuIn0.1IztrZ-ob_6Xi6lOcyP_ozPMuttMZNRPXUpN7-3w3fw" })
+    return new Web3Storage({ token: process.env.WEB3_STORAGE_API_KEY })
   }
 
   async function makeFileObjects (blob) {
