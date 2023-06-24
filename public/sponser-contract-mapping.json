@@ -1,0 +1,48 @@
+{
+    "polygon":[
+        {
+            "contractName":"uniswap",
+            "contractAddress":"0x2wse3jn3n4n23n4n23jnd2j3n2"
+        },
+        {
+            "contractName":"uniswapV2",
+            "contractAddress":"0x2wse3jn3n4n23n4ecen23jnd2j3n2"
+        }
+    ],
+    "ethglobal":[
+        {
+            "contractName":"Eth Global Staking Contract",
+            "contractAddress":"0x2wse3jn3n4n23n4n23jnd2j3n2"
+        }
+    ],
+    "filecoin":[
+        {
+            "contractName":"Estuary",
+            "contractAddress":"0x2wse3jn3n4n23n4n23jnd2j3n2"
+        }
+    ],
+    "quicknode":[
+        {
+            "contractName":"Estuary",
+            "contractAddress":"0x2wse3jn3n4n23n4n23jnd2j3n2"
+        }
+    ],
+    "worldcoin":[
+        {
+            "contractName":"Eth Global Staking Contract",
+            "contractAddress":"0x2wse3jn3n4n23n4n23jnd2j3n2"
+        }
+    ],
+    "unlockProtocol":[
+        {
+            "contractName":"Eth Global Staking Contract",
+            "contractAddress":"0x2wse3jn3n4n23n4n23jnd2j3n2"
+        }
+    ],
+    "airstack":[
+        {
+            "contractName":"Eth Global Staking Contract",
+            "contractAddress":"0x2wse3jn3n4n23n4n23jnd2j3n2"
+        }
+    ]
+}
