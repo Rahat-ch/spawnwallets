@@ -5,8 +5,8 @@
             "contractAddress":"0x2wse3jn3n4n23n4n23jnd2j3n2"
         },
         {
-            "contractName":"uniswapV2",
-            "contractAddress":"0x2wse3jn3n4n23n4ecen23jnd2j3n2"
+            "contractName":"Eth Global Staking Contract",
+            "contractAddress":"0x2wse3jn3n4n23n4n23jnd2j3n2"
         }
     ],
     "ethglobal":[
