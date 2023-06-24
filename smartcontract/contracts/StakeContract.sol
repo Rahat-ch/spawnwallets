@@ -23,8 +23,6 @@ contract StakeContract {
 
     // Function to stake ETH
     function stake() public payable {
-        // Only allow each address to stake once
-        require(stakers[msg.sender] == false, "This address has already staked.");
         // Only allow the exact stake amount
         require(msg.value == stakeAmount, "Must stake exactly 0.01 ETH.");
 
