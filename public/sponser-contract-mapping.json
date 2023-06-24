@@ -1,12 +1,31 @@
 {
+    "contracts":[
+        {
+            "name":"ETHGLOBAL WATERLOO STAKING",
+            "address":"0x32bf784e042986b7B78aEAcFbE2c4FF0D43cbb54"
+        }
+    ],
+    "sponsors":[
+        {
+            "name":"polygon",
+            "contractAdSetup":[
+                    {
+                        "contractName":"ETHGLOBAL WATERLOO STAKING",
+                        "maxFeePerUser":0.10,
+                        "maxBudget":1,
+                        "feeToken":"ETH"
+                    }
+                ]
+        }
+    ],
     "polygon":[
         {
             "contractName":"uniswap",
             "contractAddress":"0x2wse3jn3n4n23n4n23jnd2j3n2"
         },
         {
-            "contractName":"uniswapV2",
-            "contractAddress":"0x2wse3jn3n4n23n4ecen23jnd2j3n2"
+            "contractName":"Eth Global Staking Contract",
+            "contractAddress":"0x2wse3jn3n4n23n4n23jnd2j3n2"
         }
     ],
     "ethglobal":[
