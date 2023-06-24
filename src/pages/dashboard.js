@@ -25,12 +25,67 @@ const userNavigation = [
   { name: 'Sign out', href: '#' },
 ]
 
+const fileThumbnails_old = [
+    {
+      title: 'IMG_4985.HEIC',
+      size: '3.9 MB',
+      source:
+        'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
+    },
+    {
+        title: 'IMG_4985.HEIC',
+        size: '3.9 MB',
+        source:
+          'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
+      },
+      {
+        title: 'IMG_4985.HEIC',
+        size: '3.9 MB',
+        source:
+          'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
+      },
+    // More files...
+  ]
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function Example() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [fileThumbnails, setFileThumbnails] = useState([
+    {
+      title: 'IMG_4985.HEIC',
+      size: '3.9 MB',
+      source:
+        'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
+    },
+    {
+        title: 'IMG_4985.HEIC',
+        size: '3.9 MB',
+        source:
+          'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
+      },
+      {
+        title: 'IMG_4985.HEIC',
+        size: '3.9 MB',
+        source:
+          'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
+      }
+    // More files...
+  ]);
+
+  const addThumbnail = (e) => {
+    console.log('58 - addVideoThumbnail')
+    let obj = {
+      title: 'SPONSOR_VIDEO.MP4',
+      size: '3.9 MB',
+      source:
+        'https://i1.sndcdn.com/avatars-000216424319-pvx44j-t500x500.jpg',
+    };
+    fileThumbnails_old.push(obj);
+    setFileThumbnails(fileThumbnails_old);
+  };
 
   return (
     <>
@@ -285,8 +340,8 @@ export default function Example() {
           <main className="py-10">
             <div className="px-4 sm:px-6 lg:px-8">
             {/* Your content */}
-            <UploadAds/>
-            <VideosGrid/>
+            <UploadAds addThumbnail={addThumbnail}/>
+            <VideosGrid fileThumbnails={fileThumbnails}/>
             </div>
           </main>
         </div>

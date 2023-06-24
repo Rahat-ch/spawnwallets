@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { FiUpload } from "react-icons/fi";
 import { Web3Storage } from 'web3.storage'
 
-function UploadAds() {
+function UploadAds({addThumbnail}) {
   const [selectedContract, setSelectedContract] = useState("");
   const [availableContracts, setAvailableContracts] = useState([]);
   const [feePerUser, setFeePerUser] = useState("");
@@ -27,13 +27,14 @@ function UploadAds() {
     makeFileObjects(e.dataTransfer.files[0].text());
   };
   function makeStorageClient () {
-    return new Web3Storage({ token: process.env.WEB3_STORAGE_API_KEY })
+    return new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDQwQTM4QTA4MWYzMzc1YzZjOUE1RDUwYTM0ZEUzOTAzYTRCNzBkMjkiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2ODc2MzI5MzYzMzQsIm5hbWUiOiJ0ZXN0LXRva2VuIn0.1IztrZ-ob_6Xi6lOcyP_ozPMuttMZNRPXUpN7-3w3fw" })
   }
 
   async function makeFileObjects (blob) {
     const client = makeStorageClient()
     const file = new File([blob], 'video.mp4', { type: 'video/mp4' });
     const cid = await client.put([file]);
+    addThumbnail();
     console.log('CID:', cid);
     return cid;
   }
