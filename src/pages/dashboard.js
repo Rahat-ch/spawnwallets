@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useContext, useState } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
   Bars3Icon,
@@ -11,18 +11,21 @@ import {
   HomeIcon,
   UsersIcon,
   XMarkIcon,
+  PowerIcon
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import VideosGrid from '@/components/VideosGrid'
 import UploadAds from '@/components/UploadAds'
+import { AuthContext } from '@/context/AuthContext'
+import { useRouter } from 'next/router'
 
 const navigation = [
   { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
   { name: 'Browse', href: '#', icon: FolderIcon, current: false },
+  { name: 'Analysis', href: '#', icon: ChartPieIcon, current: false },
 ]
 const userNavigation = [
   { name: 'Your profile', href: '#' },
-  { name: 'Sign out', href: '#' },
 ]
 
 const fileThumbnails_old = [
@@ -74,6 +77,17 @@ export default function Example() {
       }
     // More files...
   ]);
+  
+  const { user,logout } = useContext(AuthContext);
+  const router = useRouter()
+
+  const handleSignOut = () => {
+    // Perform sign-out logic here
+    logout();
+
+    // Redirect to the home page or any other desired page
+    router.push('/');
+  };
 
   const addThumbnail = (e) => {
     console.log('58 - addVideoThumbnail')
@@ -86,6 +100,10 @@ export default function Example() {
     fileThumbnails_old.push(obj);
     setFileThumbnails(fileThumbnails_old);
   };
+
+  if(user === null || user.username === null ){
+    return <h2>User logged Out</h2>
+  }
 
   return (
     <>
@@ -168,22 +186,8 @@ export default function Example() {
                             ))}
                           </ul>
                         </li>
-                        <li>
-                          <div className="text-xs font-semibold leading-6 text-indigo-200">Your teams</div>
-                          
-                        </li>
-                        <li className="mt-auto">
-                          <a
-                            href="#"
-                            className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-indigo-200 hover:bg-indigo-700 hover:text-white"
-                          >
-                            <Cog6ToothIcon
-                              className="h-6 w-6 shrink-0 text-indigo-200 group-hover:text-white"
-                              aria-hidden="true"
-                            />
-                            Settings
-                          </a>
-                        </li>
+                        
+                        
                       </ul>
                     </nav>
                   </div>
@@ -232,21 +236,19 @@ export default function Example() {
                     ))}
                   </ul>
                 </li>
-                <li>
-                  <div className="text-xs font-semibold leading-6 text-indigo-200">Your teams</div>
-                  
-                </li>
+                
+               
                 <li className="mt-auto">
-                  <a
-                    href="#"
+                  <button
+                    onClick={handleSignOut}
                     className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-indigo-200 hover:bg-indigo-700 hover:text-white"
                   >
-                    <Cog6ToothIcon
+                    <PowerIcon
                       className="h-6 w-6 shrink-0 text-indigo-200 group-hover:text-white"
                       aria-hidden="true"
                     />
-                    Settings
-                  </a>
+                    Sign out
+                  </button>
                 </li>
               </ul>
             </nav>
@@ -300,7 +302,7 @@ export default function Example() {
                     />
                     <span className="hidden lg:flex lg:items-center">
                       <span className="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">
-                        Tom Cook
+                        {user.username}
                       </span>
                       <ChevronDownIcon className="ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                     </span>
