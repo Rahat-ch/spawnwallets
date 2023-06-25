@@ -3,11 +3,14 @@ import { useState, useEffect } from "react";
 import { FiUpload } from "react-icons/fi";
 import { Web3Storage } from 'web3.storage'
 
-function UploadAds({addThumbnail}) {
-  const [selectedContract, setSelectedContract] = useState("");
-  const [availableContracts, setAvailableContracts] = useState([]);
-  const [feePerUser, setFeePerUser] = useState("");
-  const [maxBudget, setMaxBudget] = useState("");
+function UploadAds({ storeFormData}) {
+    const [selectedContract, setSelectedContract] = useState("");
+    const [availableContracts, setAvailableContracts] = useState([]);
+    const [feePerUser, setFeePerUser] = useState("");
+    const [maxBudget, setMaxBudget] = useState("");
+    const [selectedFile,setSelectedFile] = useState(null)
+    const [errorMessage, setErrorMessage] = useState("");
+
 
   const handleOptionChange = (e) => {
     setSelectedContract(e.target.value);
@@ -24,19 +27,18 @@ function UploadAds({addThumbnail}) {
   const handleDrop = (e) => {
     e.preventDefault();
     console.log(e.dataTransfer.files[0]); // Do something with the uploaded file
-    makeFileObjects(e.dataTransfer.files[0].text());
+    makeFileObjects(e.dataTransfer.files[0]);
   };
+  
   function makeStorageClient () {
-    return new Web3Storage({ token: process.env.WEB3_STORAGE_API_KEY })
+    console.log("env value",process.env.NEXT_PUBLIC_WEB3_STORAGE_API_KEY)
+    return new Web3Storage({ token: process.env.NEXT_PUBLIC_WEB3_STORAGE_API_KEY })
   }
 
-  async function makeFileObjects (blob) {
-    const client = makeStorageClient()
-    const file = new File([blob], 'video.mp4', { type: 'video/mp4' });
-    const cid = await client.put([file]);
-    addThumbnail();
-    console.log('CID:', cid);
-    return cid;
+  async function makeFileObjects (_file) {
+    const file = new File([_file.text()], _file.name, { type: 'video/mp4' });
+    setSelectedFile(file)
+    //return cid;
   }
 
   useEffect(() => {
@@ -49,8 +51,12 @@ function UploadAds({addThumbnail}) {
     fetchData();
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!selectedContract || !feePerUser || !maxBudget || !selectedFile) {
+        setErrorMessage("Please fill in all the required fields.");
+        return;
+      }
     // Perform form submission logic here
     // You can access the form field values from the component's state
     // and the uploaded file can be accessed from the makeFileObjects function
@@ -59,20 +65,32 @@ function UploadAds({addThumbnail}) {
     console.log("Selected Contract:", selectedContract);
     console.log("Fee Per User:", feePerUser);
     console.log("Max Budget:", maxBudget);
-    
-    makeFileObjects(file)
-      .then((cid) => {
-        console.log("CID:", cid);
-        // Perform additional logic with the CID if needed
-      })
-      .catch((error) => {
-        console.error("Error uploading file:", error);
-      });
+    console.log("Selected File",selectedFile)
+    const client = makeStorageClient()
+    const cid = await client.put([selectedFile]);
+   // addThumbnail();
+    console.log('CID:', cid);
+    storeFormData(selectedContract,feePerUser,maxBudget,selectedFile.name,cid)
+
+    // makeFileObjects(file)
+    //   .then((cid) => {
+    //     console.log("CID:", cid);
+    //     // Perform additional logic with the CID if needed
+       
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error uploading file:", error);
+    //   });
   };
 
 
   return (
     <form className="flex flex-col items-center bg-white p-6 rounded-lg shadow-md my-2" onSubmit={handleSubmit}>
+      {errorMessage && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+          <span className="block sm:inline">{errorMessage}</span>
+        </div>
+      )}
       <h2 className="text-lg font-medium mb-4">Upload and Configure Ad</h2>
 
       <div className="flex">
@@ -90,6 +108,7 @@ function UploadAds({addThumbnail}) {
               value={selectedContract}
               onChange={handleOptionChange}
             >
+            <option value="" disabled>Select a contract</option>
               {availableContracts.length > 0 ? (
                 availableContracts.map((contractsDetails) => (
                   <option
@@ -181,7 +200,7 @@ function UploadAds({addThumbnail}) {
         onDragOver={(e) => e.preventDefault()}
       >
         <FiUpload className="text-gray-500 text-4xl mb-2" />
-        <p className="text-gray-500 mb-2">Drag and drop file here</p>
+        <p className="text-gray-500 mb-2">{selectedFile ? selectedFile.name : "Drag and drop file here"}</p>
         <p className="text-gray-400 text-sm">
           or{" "}
           <span className="text-blue-500 cursor-pointer hover:text-blue-400">

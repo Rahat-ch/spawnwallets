@@ -1,15 +1,9 @@
-import { Fragment, useContext, useState } from 'react'
+import { Fragment, useContext, useState, useEffect } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
   Bars3Icon,
   BellIcon,
-  CalendarIcon,
-  ChartPieIcon,
-  Cog6ToothIcon,
-  DocumentDuplicateIcon,
-  FolderIcon,
   HomeIcon,
-  UsersIcon,
   XMarkIcon,
   PowerIcon
 } from '@heroicons/react/24/outline'
@@ -18,65 +12,27 @@ import VideosGrid from '@/components/VideosGrid'
 import UploadAds from '@/components/UploadAds'
 import { AuthContext } from '@/context/AuthContext'
 import { useRouter } from 'next/router'
+import fs from 'fs/promises'
 
 const navigation = [
-  { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-  { name: 'Browse', href: '#', icon: FolderIcon, current: false },
-  { name: 'Analysis', href: '#', icon: ChartPieIcon, current: false },
+  { name: 'Dashboard', href: '/dashboard', icon: HomeIcon, current: true },
 ]
 const userNavigation = [
   { name: 'Your profile', href: '#' },
 ]
 
-const fileThumbnails_old = [
-    {
-      title: 'IMG_4985.HEIC',
-      size: '3.9 MB',
-      source:
-        'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    },
-    {
-        title: 'IMG_4985.HEIC',
-        size: '3.9 MB',
-        source:
-          'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-      },
-      {
-        title: 'IMG_4985.HEIC',
-        size: '3.9 MB',
-        source:
-          'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-      },
-    // More files...
-  ]
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
+export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [fileThumbnails, setFileThumbnails] = useState([
-    {
-      title: 'IMG_4985.HEIC',
-      size: '3.9 MB',
-      source:
-        'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-    },
-    {
-        title: 'IMG_4985.HEIC',
-        size: '3.9 MB',
-        source:
-          'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-      },
-      {
-        title: 'IMG_4985.HEIC',
-        size: '3.9 MB',
-        source:
-          'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
-      }
-    // More files...
-  ]);
+
+  const [data,setData] = useState(null)
+  const [uploadedData,setUploadedData] = useState([])
+   
   
   const { user,logout } = useContext(AuthContext);
   const router = useRouter()
@@ -89,22 +45,72 @@ export default function Example() {
     router.push('/');
   };
 
-  const addThumbnail = (e) => {
-    console.log('58 - addVideoThumbnail')
-    let obj = {
-      title: 'SPONSOR_VIDEO.MP4',
-      size: '3.9 MB',
-      source:
-        'https://i1.sndcdn.com/avatars-000216424319-pvx44j-t500x500.jpg',
-    };
-    fileThumbnails_old.push(obj);
-    setFileThumbnails(fileThumbnails_old);
+  
+
+  const storeFormData = async (contractName,feePerUser,maxBudget,filename,cid) => {
+    console.log('In storeFormData')
+    const res = await fetch("/sponser-contract-mapping.json");
+    const json = await res.json();
+    json.sponsors.map(sponsor => 
+      {
+        if(sponsor.name === user.username){
+          return sponsor.contractAdSetup.push({
+            contractName,
+            feePerUser,
+            maxBudget,
+            file:{
+              name:filename,
+              cid
+            }
+          })
+        }
+        return sponsor
+      }
+    )
+    let sponserUploadedData = [];
+    let currentSponsor = json.sponsors.find(sponsor => sponsor.name === user.username)
+    
+    
+    setUploadedData(currentSponsor.contractAdSetup)
+    console.log("After clicking upload",currentSponsor.contractAdSetup)
+   // Write the updated JSON object back to the file
+    localStorage.setItem('sponser-contract-mapping', JSON.stringify(json));
+    setData(json)
+    console.log(json);
+
+    // let obj = {
+    //   title: 'SPONSOR_VIDEO.MP4',
+    //   size: '3.9 MB',
+    //   source:
+    //     'https://i1.sndcdn.com/avatars-000216424319-pvx44j-t500x500.jpg',
+    // };
+    // fileThumbnails_old.push(obj);
+    // setFileThumbnails(fileThumbnails_old);
   };
+
+  useEffect(() => {
+    
+    const localData = localStorage.getItem('sponser-contract-mapping');
+    console.log("User",user)
+    if(localData && user){
+      setData(JSON.parse(localData))
+
+      let sponserUploadedData = [];
+      let currentSponsor = JSON.parse(localData).sponsors.find(sponsor => sponsor.name === user.username)
+      console.log("CurrentSponsor",currentSponsor)
+      console.log("AdSetups",currentSponsor.contractAdSetup)
+      setUploadedData(currentSponsor.contractAdSetup)
+    }
+    
+  }, [user,]);
+
+
 
   if(user === null || user.username === null ){
     return <h2>User logged Out</h2>
   }
 
+  
   return (
     <>
       <div>
@@ -342,8 +348,8 @@ export default function Example() {
           <main className="py-10">
             <div className="px-4 sm:px-6 lg:px-8">
             {/* Your content */}
-            <UploadAds addThumbnail={addThumbnail}/>
-            <VideosGrid fileThumbnails={fileThumbnails}/>
+            <UploadAds storeFormData={storeFormData} />
+            <VideosGrid data={uploadedData} />
             </div>
           </main>
         </div>
